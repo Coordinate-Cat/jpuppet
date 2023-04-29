@@ -4,14 +4,12 @@ mod data;
 
 fn main() {
     // 変数の定義
-    let last_names = &data::lastnames::LAST_NAMES;
-    let first_names_female = ["ナオコ", "ヨーコ", "サクラ"];
-    let first_names_male: [&str; 3] = ["アキラ", "テツオ", "コナン"];
+    let last_names = &data::last_names::LAST_NAMES;
+    let first_names_female = &data::first_names_female::FIRST_NAMES_FEMALE;
+    let first_names_male = &data::first_names_male::FIRST_NAMES_MALE;
     let mut ages: Vec<Option<String>> = vec![None; last_names.len()];
     let genders = ["Female", "Male", "Other"];
-
-    // ターミナルの画面幅を取得して、それに合わせて線を引く
-    let width = term_size::dimensions().unwrap().0;
+    let blood_types = ["A", "B", "O", "AB"];
 
     // 名前の選択
     println!();
@@ -124,8 +122,26 @@ fn main() {
     println!();
     println!("Please select your first name from the following list:");
 
+    // for (i, first_name) in first_names.iter().enumerate() {
+    //     println!("{}: {}", i + 1, first_name);
+    // }
+
     for (i, first_name) in first_names.iter().enumerate() {
-        println!("{}: {}", i + 1, first_name);
+        // nameの文字数によって、スペースの数を変える
+        if first_name.chars().count() == 3 && first_names[i + 1].chars().count() == 2 {
+            // 3文字の場合、2文字分のスペースを左に追加する
+            print!("{:>3}: {:<3} ", i + 1, first_name);
+        } else if first_name.chars().count() == 1 && first_names[i + 1].chars().count() == 1 {
+            // 1文字の場合、2文字分のスペースを左に追加する
+            print!("{:>3}: {:<5}", i + 1, first_name);
+        } else {
+            print!("{:>3}: {:<4} ", i + 1, first_name);
+        }
+
+        // 5列ごとに改行する
+        if (i + 1) % 5 == 0 {
+            println!();
+        }
     }
 
     let first_name = loop {
@@ -144,8 +160,33 @@ fn main() {
         }
     };
 
+    // 血液型の選択
+    println!();
+    println!("Please select your blood type from the following list:");
+
+    for (i, blood_type) in blood_types.iter().enumerate() {
+        println!("{}: {}", i + 1, blood_type);
+    }
+
+    let blood_type = loop {
+        print!("> ");
+        io::stdout().flush().expect("Failed to flush stdout");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+        let trimmed = input.trim();
+        if let Ok(index) = trimmed.parse::<usize>() {
+            if index > 0 && index <= blood_types.len() {
+                break blood_types[index - 1].to_owned();
+            }
+            println!("Invalid input. Please try again.");
+        }
+    };
+
     // ################ 入力された情報を表示する ################
-    println!("{}", "#".repeat(width));
+    println!();
+    draw_line();
     println!("Thank you for your input!");
     println!("Persona has been generated.");
     println!();
@@ -158,12 +199,19 @@ fn main() {
         .find(|&a| a.is_some())
         .map(|a| a.as_ref().unwrap())
     {
-        println!("Age: {} 歳", age);
+        println!("Age: {}", age);
     } else {
         println!("Age: (not provided)");
     }
     println!("Gender: {}", gender);
+    println!("Blood Type: {}", blood_type);
 
-    println!("{}", "#".repeat(width));
+    draw_line();
     // ####################################################
+}
+
+fn draw_line() {
+    // ターミナルの画面幅を取得して、それに合わせて線を引く
+    let width = term_size::dimensions().unwrap().0;
+    println!("{}", "#".repeat(width));
 }

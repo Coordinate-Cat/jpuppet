@@ -3,6 +3,7 @@
 ## Description
 
 This is a simple script to generate a sock puppet account for the Japanese.
+CLI tool created in Rust.
 
 ## Lists(flow)
 
@@ -15,7 +16,7 @@ This is a simple script to generate a sock puppet account for the Japanese.
 - [ ] kata name
 - [ ] romaji name
 - [ ] birthday
-- [ ] blood type
+- [x] blood type
 - [ ] height
 - [ ] weight
 - [ ] occupation
@@ -27,3 +28,7 @@ This is a simple script to generate a sock puppet account for the Japanese.
 ## dependencies
 
 - term_size
+
+## License
+
+Apache-2.0 license([.](https://github.com/Coordinate-Cat/jpuppet/blob/main/LICENSE))
